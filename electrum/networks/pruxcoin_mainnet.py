@@ -79,7 +79,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
      else if index >= 7331700:
      TARGET_TIMESPAN = int(5 * 60 * 60)
      TARGET_SPACING = int(9)
-     else 
+     else: 
      TARGET_TIMESPAN = int(60 * 6)
      TARGET_SPACING = int(3)
          
