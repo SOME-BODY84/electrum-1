@@ -76,7 +76,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
 
     @classmethod
     def max_checkpoint(cls) -> int:
-    return max(0, len(cls.CHECKPOINTS) * 112016 - 1)
+    return max(0, len(cls.CHECKPOINTS) * 2016 - 1)
 
     @classmethod
     def rev_genesis_bytes(cls) -> bytes:
