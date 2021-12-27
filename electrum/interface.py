@@ -694,8 +694,6 @@ class Interface(Logger):
                 self.blockchain.save_header(header)
             return 'catchup', height
 
-        good, bad, bad_header = await self._search_headers_binary(height, bad, bad_header, chain)
-        return await self._resolve_potential_chain_fork_given_forkpoint(good, bad, bad_header)
 
     async def _search_headers_binary(self, height, bad, bad_header, chain):
         assert bad == bad_header['block_height']
