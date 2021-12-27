@@ -70,7 +70,9 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     TARGET_SPACING = int(3)
     INTERVAL = int(TARGET_TIMESPAN / TARGET_SPACING)
 
-    
+ 
+
+    @classmethod
     def get_target(self, index: int) -> int:
         # compute target from chunk x, used in chunk x+1
         if constants.net.TESTNET:
