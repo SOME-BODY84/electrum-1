@@ -90,12 +90,6 @@ class AuxPoWCoinbaseRootDuplicatedError(AuxPowVerifyError):
 class AuxPoWCoinbaseRootWrongOffset(AuxPowVerifyError):
     pass
 
-def auxpow_active(base_header):
-    height_allows_auxpow = base_header['block_height'] >= constants.net.AUXPOW_START_HEIGHT
-    version_allows_auxpow = base_header['version'] & BLOCK_VERSION_AUXPOW_BIT
-    
-    return height_allows_auxpow and version_allows_auxpow
-
 def get_chain_id(base_header):
     return base_header['version'] >> 16
 
