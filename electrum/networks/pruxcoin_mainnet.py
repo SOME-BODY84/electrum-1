@@ -71,6 +71,18 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     INTERVAL = int(TARGET_TIMESPAN / TARGET_SPACING)
 
     @classmethod
+    def get_target(cls, height: int, blockchain) -> int:
+        index = height // 2016 - 1
+        if index == -1:
+            return cls.MAX_TARGET
+
+        if index < len(blockchain.checkpoints):
+            h, t = blockchain.checkpoints[index]
+            return t
+
+        return cls.get_target_btc(height, blockchain)
+
+    @classmethod
     def get_target_btc(cls, height: int, blockchain) -> int:
         if not height % cls.INTERVAL == 0:
             # Get the first block of this retarget period
@@ -93,4 +105,4 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
         new_target = min(cls.MAX_TARGET, (target * nActualTimespan) // cls.TARGET_TIMESPAN)
         # not any target can be represented in 32 bits:
         new_target = blockchain.bits_to_target(blockchain.target_to_bits(new_target))
-        return 
+        return new_target
