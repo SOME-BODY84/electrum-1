@@ -73,7 +73,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     INTERVAL = int(TARGET_TIMESPAN / TARGET_SPACING)
 
    	
-     if index >= 7770000:
+     if index > 7770000:
      TARGET_TIMESPAN = int(15 * 60)
      TARGET_SPACING = int(9)
      else if index >= 7331700:
