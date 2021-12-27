@@ -70,6 +70,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     TARGET_SPACING = int(3)
     INTERVAL = int(TARGET_TIMESPAN / TARGET_SPACING)
 
+
     @classmethod
     def get_target(cls, height: int, blockchain) -> int:
         index = height // 2016 - 1
@@ -77,6 +78,9 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
         if index == -1:
             return cls.MAX_TARGET
 
+        if index < len(blockchain.checkpoints):
+            h, t = blockchain.checkpoints[index]
+            return t
 
         if not height % cls.INTERVAL == 0:
             # Get the first block of this retarget period
@@ -86,7 +90,12 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
             return blockchain.bits_to_target(last['bits'])
 
         # new target
-        first = blockchain.read_header(height - cls.INTERVAL - 1)
+        if (index * 2016 + 2015 > 15615201) and (index * 2016 + 2015 + 1 > 2016):
+            # Namecoin: Apply retargeting hardfork after AuxPoW start
+            first = blockchain.read_header(height - cls.INTERVAL - 1)
+        else:
+            first = blockchain.read_header(height - cls.INTERVAL)
+
         last = blockchain.read_header(height - 1)
         if not first or not last:
             raise MissingHeader()
