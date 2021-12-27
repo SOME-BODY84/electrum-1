@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Electrum-NMC - lightweight Namecoin client
-# Copyright (C) 2018 The Namecoin developers
+# Electrum-DOGE - lightweight Dogecoin client
+# Copyright (C) 2018 The Dogecoin developers
 #
 # License for all components not part of Electrum-DOGE:
 #
@@ -45,9 +45,12 @@
 
 import binascii
 
+from . import blockchain
 from .bitcoin import hash_encode, hash_decode
+from . import constants
 from .crypto import sha256d
-from . import blockchain, constants, transaction
+from .merkle import hash_merkle_root
+from . import transaction
 from .transaction import BCDataStream, Transaction, TxOutput, TYPE_SCRIPT
 from .util import bfh, bh2u
 
@@ -57,6 +60,9 @@ MAX_INDEX_PC_BACKWARDS_COMPATIBILITY = 20
 
 # Header for merge-mining data in the coinbase.
 COINBASE_MERGED_MINING_HEADER = bfh('fabe') + b'mm'
+
+BLOCK_VERSION_AUXPOW_BIT = 0x100
+#BLOCK_VERSION_AUXPOW_BIT = 0x000
 
 class AuxPowVerifyError(Exception):
     pass
@@ -88,6 +94,12 @@ class AuxPoWCoinbaseRootDuplicatedError(AuxPowVerifyError):
 class AuxPoWCoinbaseRootWrongOffset(AuxPowVerifyError):
     pass
 
+def auxpow_active(base_header):
+    height_allows_auxpow = base_header['block_height'] >= constants.net.AUXPOW_START_HEIGHT
+    version_allows_auxpow = base_header['version'] & BLOCK_VERSION_AUXPOW_BIT
+
+    return height_allows_auxpow and version_allows_auxpow
+
 def get_chain_id(base_header):
     return base_header['version'] >> 16
 
@@ -96,6 +108,7 @@ def deserialize_auxpow_header(base_header, s, start_position=0) -> (dict, int):
 
     Returns the deserialised AuxPoW dict and the end position in the byte
     array as a pair."""
+
     auxpow_header = {}
 
     # Chain ID is the top 16 bits of the 32-bit version.
@@ -118,9 +131,9 @@ def deserialize_auxpow_header(base_header, s, start_position=0) -> (dict, int):
     auxpow_header['chain_merkle_branch'], auxpow_header['chain_merkle_index'], start_position = deserialize_merkle_branch(s, start_position=start_position)
     
     # Finally there's the parent header.  Deserialize it.
-    parent_header_bytes = s[start_position : start_position + constants.net.HEADER_SIZE]
+    parent_header_bytes = s[start_position : start_position + blockchain.HEADER_SIZE]
     auxpow_header['parent_header'] = blockchain.deserialize_pure_header(parent_header_bytes, None)
-    start_position += constants.net.HEADER_SIZE
+    start_position += blockchain.HEADER_SIZE
     # The parent block header doesn't have any block height,
     # so delete that field.  (We used None as a dummy value above.)
     del auxpow_header['parent_header']['block_height']
@@ -143,30 +156,12 @@ def deserialize_merkle_branch(s, start_position=0):
     return hashes, index, vds.read_cursor
 
 def hash_parent_header(header):
-    if not constants.net.is_auxpow_active(header):
+    if not auxpow_active(header):
         return blockchain.hash_header(header)
 
     verify_auxpow(header)
 
     return blockchain.hash_header(header['auxpow']['parent_header'])
-
-# Reimplementation of btcutils.check_merkle_branch from Electrum-DOGE.
-# btcutils seems to have an unclear license and no obvious Git repo, so it
-# seemed wiser to re-implement.
-# This re-implementation is roughly based on libdohj's calculateMerkleRoot.
-def calculate_merkle_root(leaf, merkle_branch, index):
-    target = hash_decode(leaf)
-    mask = index
-
-    for merkle_step in merkle_branch:
-        if mask & 1 == 0: # 0 means it goes on the right
-            data_to_hash = target + hash_decode(merkle_step)
-        else:
-            data_to_hash = hash_decode(merkle_step) + target
-        target = sha256d(data_to_hash)
-        mask = mask >> 1
-
-    return hash_encode(target)
 
 # Copied from Electrum-DOGE
 # TODO: Audit this function carefully.
@@ -218,12 +213,12 @@ def verify_auxpow(header):
     #std::reverse(vchRootHash.begin(), vchRootHash.end()); // correct endian
 
     # Check that the chain merkle root is in the coinbase
-    root_hash_bytes = bfh(calculate_merkle_root(auxhash, chain_merkle_branch, chain_index))
+    root_hash_bytes = bfh(hash_merkle_root(chain_merkle_branch, auxhash, chain_index))
 
     # Check that we are in the parent block merkle tree
     # if (CBlock::CheckMerkleBranch(GetHash(), vMerkleBranch, nIndex) != parentBlock.hashMerkleRoot)
     #    return error("Aux POW merkle root incorrect");
-    if (calculate_merkle_root(coinbase_hash, coinbase_merkle_branch, coinbase_index) != parent_block['merkle_root']):
+    if (hash_merkle_root(coinbase_merkle_branch, coinbase_hash, coinbase_index) != parent_block['merkle_root']):
         raise AuxPoWBadCoinbaseMerkleBranchError("Aux POW merkle root incorrect")
 
     #// Check that there is at least one input.
@@ -358,7 +353,7 @@ def fast_txid(tx):
     return bh2u(sha256d(tx._cached_network_ser_bytes)[::-1])
 
 # Used by fast_tx_deserialize
-def stub_parse_output(vds):
+def stub_parse_output(vds: BCDataStream) -> TxOutput:
     vds.read_int64() # value
     vds.read_bytes(vds.read_compact_size()) # scriptpubkey
     return TxOutput(value=0, scriptpubkey=b'')
@@ -371,8 +366,6 @@ def fast_tx_deserialize(tx):
 
     try:
         result = tx.deserialize()
-    except Exception as exc:
-        print(exc)
     finally:
         # Restore the real output address parser.
         transaction.parse_output = real_parse_output
