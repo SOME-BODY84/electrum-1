@@ -77,9 +77,6 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
         if index == -1:
             return cls.MAX_TARGET
 
-        if index < len(blockchain.checkpoints):
-            h, t = blockchain.checkpoints[index]
-            return t
 
         if not height % cls.INTERVAL == 0:
             # Get the first block of this retarget period
