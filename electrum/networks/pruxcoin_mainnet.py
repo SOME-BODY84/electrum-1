@@ -57,7 +57,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     DECIMAL_POINT_DEFAULT = 5  # mPRUX
     AUXPOW_CHAIN_ID = 0x03BF
     AUXPOW_START_HEIGHT = 15615201
-    BLOCK_VERSION_AUXPOW_BIT = 0x628
+    BLOCK_VERSION_AUXPOW_BIT = 0x100
 
     BLOCK_EXPLORERS = {
         'Cyphrs.com': ('https://namecoin.cyphrs.com/', {'tx': 'tx/', 'addr': 'address/'}),
