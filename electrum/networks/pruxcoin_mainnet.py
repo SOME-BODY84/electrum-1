@@ -74,15 +74,15 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     def get_hash(self, height: int) -> str:
         def is_height_checkpoint():
             within_cp_range = height <= constants.net.max_checkpoint()
-            at_chunk_boundary = (height+1) % 2016 == 0
+            at_chunk_boundary = (height+1) % 201600 == 0
             return within_cp_range and at_chunk_boundary
 
         if height == -1:
-            return '0000000000000000000000000000000000000000000000000000000000000000'
+            return '0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
         elif height == 0:
             return constants.net.GENESIS
         elif is_height_checkpoint():
-            index = height // 2016
+            index = height // 201600
             h, t, _ = self.checkpoints[index]
             return h
         else:
@@ -92,8 +92,8 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
             return hash_header(header)
     @classmethod 
     def get_timestamp(self, height):
-        if height < len(self.checkpoints) * 2016 and (height+1) % 2016 == 0:
-            index = height // 2016
+        if height < len(self.checkpoints) * 201600 and (height+1) % 201600 == 0:
+            index = height // 201600
             _, _, ts = self.checkpoints[index]
             return ts
         return self.read_header(height).get('timestamp')
@@ -110,8 +110,8 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
             return t
         # new target
         # Viacoin: go back the full period unless it's the first retarget
-        first_timestamp = self.get_timestamp(index * 2016 - 1 if index > 0 else 0)
-        last = self.read_header(index * 2016 + 2015)
+        first_timestamp = self.get_timestamp(index * 201600 - 1 if index > 0 else 0)
+        last = self.read_header(index * 201006 + 201500)
         if not first_timestamp or not last:
             raise MissingHeader()
         bits = last.get('bits')
