@@ -69,7 +69,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     # of 10 MB works fine for Namecoin as of block height 418744 (5 MB fails after
     # height 155232); we set a limit of 20 MB so that we have extra wiggle room.
     MAX_INCOMING_MSG_SIZE = 20_000_000  # in bytes
- 	TARGET_TIMESPAN = int(60 * 6)
+    TARGET_TIMESPAN = int(60 * 6)
     TARGET_SPACING = int(3)
 
     INTERVAL = int(TARGET_TIMESPAN / TARGET_SPACING)
