@@ -89,6 +89,11 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
                 raise MissingHeader()
             return blockchain.bits_to_target(last['bits'])
 
+        # new target
+        if (index * 2016 + 2015 > 19200) and (index * 2016 + 2015 + 1 > 2016):
+            # Namecoin: Apply retargeting hardfork after AuxPoW start
+            first = blockchain.read_header(height - cls.INTERVAL - 1)
+        else:
             first = blockchain.read_header(hight - cls.INTERVAL)
 
         last = blockchain.read_header(height - 1)
@@ -98,18 +103,18 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
         bits = last.get('bits')
         target = blockchain.bits_to_target(bits)
   
-        if index > 15000:
-             nActualTimespan = last.get('timestamp') - first.get('timestamp') 
-             nActualTimespan = max(nActualTimespan, cls.TARGET_TIMESPAN // 4)
-             nActualTimespan = min(nActualTimespan, cls.TARGET_TIMESPAN * 4)
-             new_target = min(cls.MAX_TARGET, (target * nActualTimespan) // cls.TARGET_TIMESPAN)
-             new_target = blockchain.bits_to_target(blockchain.target_to_bits(new_target))
-        return new_target  
+     
+    
+        if index < 15000:
+             nActualTimespan = last.get('timestamp') - first.get('timestamp') / 2
         else:
-        nActualTimespan = last.get('timestamp') - first.get('timestamp') / 2     
+             nActualTimespan = last.get('timestamp') - first.get('timestamp') 
+
+           
+        
         nActualTimespan = max(nActualTimespan, cls.TARGET_TIMESPAN // 4)
         nActualTimespan = min(nActualTimespan, cls.TARGET_TIMESPAN * 4)
         new_target = min(cls.MAX_TARGET, (target * nActualTimespan) // cls.TARGET_TIMESPAN)
         # not any target can be represented in 32 bits:
         new_target = blockchain.bits_to_target(blockchain.target_to_bits(new_target))
-        return new_target  
+        return new_target 
