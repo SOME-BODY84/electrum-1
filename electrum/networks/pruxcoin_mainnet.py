@@ -70,6 +70,19 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     TARGET_SPACING = int(3)
     INTERVAL = int(TARGET_TIMESPAN / TARGET_SPACING)
 
+    
+    HEADER_SIZE = 80  # bytes
+    MAX_TARGET = 0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+
+    @classmethod
+    def max_checkpoint(cls) -> int:
+    return max(0, len(cls.CHECKPOINTS) * 112016 - 1)
+
+    @classmethod
+    def rev_genesis_bytes(cls) -> bytes:
+    return bytes.fromhex(bitcoin.rev_hex(cls.GENESIS)) 
+    
+    
     @classmethod
     def get_target(cls, height: int, blockchain) -> int:
         index = height // 2016 - 1
