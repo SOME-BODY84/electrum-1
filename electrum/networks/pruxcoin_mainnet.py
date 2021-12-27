@@ -72,18 +72,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
 
     INTERVAL = int(TARGET_TIMESPAN / TARGET_SPACING)
 
-   
-        
-    
-    
-    
-    
-    
-    @classmethod
-    def get_target(cls, height: int, blockchain) -> int:
-        index = height // 2016 - 1
-
-	
+   	
      if index >= 7770000:
      TARGET_TIMESPAN = int(15 * 60)
      TARGET_SPACING = int(9)
@@ -93,9 +82,15 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
      else 
      TARGET_TIMESPAN = int(60 * 6)
      TARGET_SPACING = int(3)
+         
     
-
-
+    
+    
+    
+    
+    @classmethod
+    def get_target(cls, height: int, blockchain) -> int:
+        index = height // 2016 - 1
 
         if index == -1:
             return cls.MAX_TARGET
