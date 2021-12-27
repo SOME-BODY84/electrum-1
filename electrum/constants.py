@@ -49,9 +49,6 @@ networks = {
 net = networks['Pruxcoin']
 
 def select_network(network='Pruxcoin'):
-    if not network in networks:
-        raise Exception('Invalid Network. Available: {}'.format(
-            list(networks.keys())))
     global net
     net = networks.get(network, 'Pruxcoin')
     return
