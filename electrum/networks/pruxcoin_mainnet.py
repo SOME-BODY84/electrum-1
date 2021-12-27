@@ -109,11 +109,10 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
      
     
         if index < 15000:
-         nActualTimespan = last.get('timestamp') - first.get('timestamp') / 2
-            return nActualTimespan  
-        if index > 15000:
-         nActualTimespan = last.get('timestamp') - first.get('timestamp') 
-            return nActualTimespan    
+             nActualTimespan = last.get('timestamp') - first.get('timestamp') / 2
+        else:
+             nActualTimespan = last.get('timestamp') - first.get('timestamp') 
+
            
         
         nActualTimespan = max(nActualTimespan, cls.TARGET_TIMESPAN // 4)
