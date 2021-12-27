@@ -530,19 +530,11 @@ class Blockchain(Logger):
         return False
 
     def get_hash(self, height: int) -> str:
-        def is_height_checkpoint():
-            within_cp_range = height <= constants.net.max_checkpoint()
-            at_chunk_boundary = (height+1) % 2016 == 0
-            return within_cp_range and at_chunk_boundary
 
         if height == -1:
             return '0000000000000000000000000000000000000000000000000000000000000000'
         elif height == 0:
             return constants.net.GENESIS
-        elif is_height_checkpoint():
-            index = height // 2016
-            h, t = self.checkpoints[index]
-            return h
         else:
             header = self.read_header(height)
             if header is None:
