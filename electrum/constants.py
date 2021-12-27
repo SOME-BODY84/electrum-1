@@ -46,9 +46,9 @@ networks = {
     'Pruxcoin-Mainnet': PruxcoinMainnet,    
 }
 
-net = networks['Bitcoin']
+net = networks['Pruxcoin']
 
 def set_mainnet():
      global net
-     net = BitcoinMainnet
+     net = PruxcoinMainnet
      return
