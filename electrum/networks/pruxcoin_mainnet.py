@@ -11,8 +11,8 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     SHORT_CODE = 'PRUX'
     TESTNET = False
     WIF_PREFIX = 0xB7
-    ADDRTYPE_P2PKH = 0x37
-        ADDRTYPE_P2SH = 0x75
+    ADDRTYPE_P2PKH = 55
+        ADDRTYPE_P2SH = 117
     SEGWIT_HRP = "pr"
     GENESIS = "32dca787cfb73d50595a599b6fd72afce9a7c52ead22b8f15dfd8aabc5eaac32"
     DEFAULT_PORTS = {'t': '50001', 's': '50002'}
