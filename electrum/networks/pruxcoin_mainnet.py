@@ -57,7 +57,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     DECIMAL_POINT_DEFAULT = 5  # mPRUX
     AUXPOW_CHAIN_ID = 0x03BF
     AUXPOW_START_HEIGHT = 15615201
-    BLOCK_VERSION_AUXPOW_BIT = 0x1c3
+    BLOCK_VERSION_AUXPOW_BIT = 0
 
     BLOCK_EXPLORERS = {
         'Cyphrs.com': ('https://namecoin.cyphrs.com/', {'tx': 'tx/', 'addr': 'address/'}),
@@ -98,7 +98,10 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
         bits = last.get('bits')
         target = blockchain.bits_to_target(bits)
   
-     
+        if index > 15000:
+             nActualTimespan = last.get('timestamp') - first.get('timestamp') 
+        else:
+        nActualTimespan = last.get('timestamp') - first.get('timestamp') / 2     
     
 
         nActualTimespan = last.get('timestamp') - first.get('timestamp')        
