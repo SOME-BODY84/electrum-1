@@ -73,7 +73,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
 
     @classmethod
     def get_target(cls, height: int, blockchain) -> int:
-        index = height // 2016000 - 1
+            index = height // 2016 - 1
 
         if index == -1:
             return cls.MAX_TARGET
