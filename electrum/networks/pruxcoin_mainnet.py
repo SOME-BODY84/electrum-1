@@ -65,7 +65,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     # chains, because those chains' block headers have extra AuxPoW data.  A limit
     # of 10 MB works fine for Namecoin as of block height 418744 (5 MB fails after
     # height 155232); we set a limit of 20 MB so that we have extra wiggle room.
-    MAX_INCOMING_MSG_SIZE = 200_000_000  # in bytes
+    MAX_INCOMING_MSG_SIZE = 20_000_000  # in bytes
     TARGET_TIMESPAN = int(60 * 6)
     TARGET_SPACING = int(3)
     INTERVAL = int(TARGET_TIMESPAN / TARGET_SPACING)
@@ -78,7 +78,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     
     @classmethod
     def get_target(cls, height: int, blockchain) -> int:
-        index = height // 2016 - 1
+        index = height // 216 - 1
 
         if index == -1:
             return cls.MAX_TARGET
@@ -95,7 +95,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
             return blockchain.bits_to_target(last['bits'])
 
         # new target
-        if (index * 2016 + 2015 > 15615201) and (index * 2016 + 2015 + 1 > 2016):
+        if (index * 216 + 215 > 15615201) and (index * 216 + 215 + 1 > 216):
             # Namecoin: Apply retargeting hardfork after AuxPoW start
             first = blockchain.read_header(height - cls.INTERVAL - 1)
         else:
