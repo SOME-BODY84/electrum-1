@@ -10,9 +10,9 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     NAME_LOWER = 'pruxcoin'
     SHORT_CODE = 'PRUX'
     TESTNET = False
-    WIF_PREFIX = 183
-    ADDRTYPE_P2PKH = 55
-    ADDRTYPE_P2SH = 117
+    WIF_PREFIX = 0xB7
+    ADDRTYPE_P2PKH = 0x37
+        ADDRTYPE_P2SH = 0x75
     SEGWIT_HRP = "pr"
     GENESIS = "32dca787cfb73d50595a599b6fd72afce9a7c52ead22b8f15dfd8aabc5eaac32"
     DEFAULT_PORTS = {'t': '50001', 's': '50002'}
@@ -54,7 +54,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     BASE_UNITS = {'PRUX': 8, 'mPRUX': 5, 'uPRUX': 2, 'swartz': 0}
     BASE_UNITS_INVERSE = inv_dict(BASE_UNITS)
     BASE_UNITS_LIST = ['PRUX', 'mPRUX', 'uPRUX', 'swartz']
-    DECIMAL_POINT_DEFAULT = 5  # mPRUX
+    DECIMAL_POINT_DEFAULT = 8  # mPRUX
     AUXPOW_CHAIN_ID = 0x03BF
     AUXPOW_START_HEIGHT = 15615201
     BLOCK_VERSION_AUXPOW_BIT = 0x100
@@ -107,7 +107,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
         bits = last.get('bits')
         target = blockchain.bits_to_target(bits)
         if (height > 15000):
-            nActualTimespan = (last.get('timestamp') - first.get('timestamp') / 2) 
+            nActualTimespan = (last.get('timestamp') - first.get('timestamp') // 2) 
         else:
             nActualTimespan = last.get('timestamp') - first.get('timestamp')
         nActualTimespan = max(nActualTimespan, cls.TARGET_TIMESPAN // 4)
