@@ -71,15 +71,9 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     MAX_INCOMING_MSG_SIZE = 20_000_000  # in bytes
 
     INTERVAL = int(TARGET_TIMESPAN / TARGET_SPACING)
- 	
+ 	TARGET_TIMESPAN = int(60 * 6)
+    TARGET_SPACING = int(3)
 
-     TARGET_TIMESPAN = int(60 * 6)
-     TARGET_SPACING = int(3)
-         
-    
-    
-    
-    
     
     @classmethod
     def get_target(cls, height: int, blockchain) -> int:
