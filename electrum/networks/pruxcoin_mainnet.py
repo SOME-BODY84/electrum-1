@@ -94,11 +94,6 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
                 raise MissingHeader()
             return blockchain.bits_to_target(last['bits'])
 
-        # new target
-        if (index * 2016 + 2015 > 19200) and (index * 2016 + 2015 + 1 > 2016):
-            # Namecoin: Apply retargeting hardfork after AuxPoW start
-            first = blockchain.read_header(height - cls.INTERVAL - 1)
-        else:
             first = blockchain.read_header(height - cls.INTERVAL)
 
         last = blockchain.read_header(height - 1)
