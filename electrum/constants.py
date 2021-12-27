@@ -42,6 +42,8 @@ networks = {
     'Donu-Mainnet': DonuMainnet,
     'Namecoin': NamecoinMainnet,
     'Namecoin-Mainnet': NamecoinMainnet,
+    'Pruxcoin': PruxcoinMainnet,
+    'Pruxcoin-Mainnet': PruxcoinMainnet,    
 }
 
 net = networks['Bitcoin']
@@ -52,4 +54,4 @@ def select_network(network='{{buildmatrix_coin_name_normal}}'):
             list(networks.keys())))
     global net
     net = networks.get(network, '{{buildmatrix_coin_name_normal}}')
-return
+    return
