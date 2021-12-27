@@ -70,8 +70,8 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     # height 155232); we set a limit of 20 MB so that we have extra wiggle room.
     MAX_INCOMING_MSG_SIZE = 20_000_000  # in bytes
 
-    TARGET_TIMESPAN = int(14 * 24 * 60 * 60)
-    TARGET_SPACING = int(10 * 60)
+    TARGET_TIMESPAN = int(60 * 6)
+    TARGET_SPACING = int(3)
     INTERVAL = int(TARGET_TIMESPAN / TARGET_SPACING)
 
     @classmethod
@@ -112,8 +112,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
              nActualTimespan = last.get('timestamp') - first.get('timestamp') 
         else:
              nActualTimespan = last.get('timestamp') - first.get('timestamp') / 2
-
-           
+     
         
         nActualTimespan = max(nActualTimespan, cls.TARGET_TIMESPAN // 4)
         nActualTimespan = min(nActualTimespan, cls.TARGET_TIMESPAN * 4)
