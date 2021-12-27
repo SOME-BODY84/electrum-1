@@ -86,7 +86,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
             return blockchain.bits_to_target(last['bits'])
 
         # new target
-        first = blockchain.read_header(height - cls.INTERVAL)
+        first = blockchain.read_header(height - cls.INTERVAL - 1)
         last = blockchain.read_header(height - 1)
         if not first or not last:
             raise MissingHeader()
