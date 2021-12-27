@@ -37,7 +37,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
         'p2wsh':       0x02aa7ed3,  # Zpub
     }
     XPUB_HEADERS_INV = inv_dict(XPUB_HEADERS)
-    BIP44_COIN_TYPE = 0
+    BIP44_COIN_TYPE = 7
     LN_REALM_BYTE = 0
     LN_DNS_SEEDS = []
     OPEN_ALIAS_PREFIX = 'prux'
@@ -68,7 +68,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     # chains, because those chains' block headers have extra AuxPoW data.  A limit
     # of 10 MB works fine for Namecoin as of block height 418744 (5 MB fails after
     # height 155232); we set a limit of 20 MB so that we have extra wiggle room.
-    MAX_INCOMING_MSG_SIZE = 20_000_000  # in bytes
+    MAX_INCOMING_MSG_SIZE = 30_000_000  # in bytes
     TARGET_TIMESPAN = int(60 * 6);
     TARGET_SPACING = int(3);
     
