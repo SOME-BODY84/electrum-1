@@ -1,7 +1,7 @@
 from electrum.exceptions import MissingHeader
 from electrum.util import inv_dict, read_json
 from .abstract_network import AbstractNet
-from .auxpow_mixin import AuxPowMixin
+from .auxpow_mixin2 import AuxPowMixin
 
 
 class PruxcoinMainnet(AbstractNet, AuxPowMixin):
