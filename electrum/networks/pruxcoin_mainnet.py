@@ -71,15 +71,8 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     MAX_INCOMING_MSG_SIZE = 20_000_000  # in bytes
 
     INTERVAL = int(TARGET_TIMESPAN / TARGET_SPACING)
+ 	
 
-   	
-     if index > 7770000:
-     TARGET_TIMESPAN = int(15 * 60)
-     TARGET_SPACING = int(9)
-     else if index >= 7331700:
-     TARGET_TIMESPAN = int(5 * 60 * 60)
-     TARGET_SPACING = int(9)
-     else: 
      TARGET_TIMESPAN = int(60 * 6)
      TARGET_SPACING = int(3)
          
