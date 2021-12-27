@@ -46,8 +46,6 @@ networks = {
     'Pruxcoin-Mainnet': PruxcoinMainnet,    
 }
 
-net = networks['Pruxcoin']
-
 def select_network(network='Pruxcoin'):
     global net
     net = networks.get(network, 'Pruxcoin')
