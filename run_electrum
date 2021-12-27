@@ -331,7 +331,6 @@ if __name__ == '__main__':
     if not config_options.get('verbosity'):
         warnings.simplefilter('ignore', DeprecationWarning)
 
-    constants.select_network(config_options.get('network'))
     
     # check uri
     uri = config_options.get('url')
