@@ -74,7 +74,6 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     HEADER_SIZE = 80  # bytes
     MAX_TARGET = 0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 
-
     
     @classmethod
     def get_target(cls, height: int, blockchain) -> int:
@@ -107,10 +106,15 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
 
         bits = last.get('bits')
         target = blockchain.bits_to_target(bits)
-        nActualTimespan = last.get('timestamp') - first.get('timestamp')
+        if (index > 15000):
+            nActualTimespan = (last.get('timestamp') - first.get('timestamp') //2)
+        else:
+            nActualTimespan = last.get('timestamp') - first.get('timestamp')
         nActualTimespan = max(nActualTimespan, cls.TARGET_TIMESPAN // 4)
         nActualTimespan = min(nActualTimespan, cls.TARGET_TIMESPAN * 4)
         new_target = min(cls.MAX_TARGET, (target * nActualTimespan) // cls.TARGET_TIMESPAN)
+        
+        
         # not any target can be represented in 32 bits:
         new_target = blockchain.bits_to_target(blockchain.target_to_bits(new_target))
         return new_target 
