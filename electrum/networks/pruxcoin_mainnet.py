@@ -74,14 +74,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     HEADER_SIZE = 80  # bytes
     MAX_TARGET = 0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 
-    @classmethod
-    def max_checkpoint(cls) -> int:
-    return max(0, len(cls.CHECKPOINTS) * 2016 - 1)
 
-    @classmethod
-    def rev_genesis_bytes(cls) -> bytes:
-    return bytes.fromhex(bitcoin.rev_hex(cls.GENESIS)) 
-    
     
     @classmethod
     def get_target(cls, height: int, blockchain) -> int:
