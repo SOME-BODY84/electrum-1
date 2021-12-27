@@ -59,10 +59,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     AUXPOW_START_HEIGHT = 15615201
     BLOCK_VERSION_AUXPOW_BIT = 0x100
 
-    BLOCK_EXPLORERS = {
-        'Cyphrs.com': ('https://namecoin.cyphrs.com/', {'tx': 'tx/', 'addr': 'address/'}),
-        'system default': ('blockchain:/', {'tx': 'tx/', 'addr': 'address/'}),
-    }
+    BLOCK_EXPLORERS = {}
 
     # The default Bitcoin frame size limit of 1 MB doesn't work for AuxPoW-based
     # chains, because those chains' block headers have extra AuxPoW data.  A limit
