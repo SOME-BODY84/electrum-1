@@ -78,7 +78,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     
     @classmethod
     def get_target(cls, height: int, blockchain) -> int:
-        index = height // 216 - 1
+        index = height // 21600000 - 1
 
         if index == -1:
             return cls.MAX_TARGET
@@ -95,7 +95,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
             return blockchain.bits_to_target(last['bits'])
 
         # new target
-        if (index * 216 + 215 > 15615201) and (index * 216 + 215 + 1 > 216):
+        if (index * 21600000 + 21500000 > 15615201) and (index * 21600000 + 21500000 + 1 > 21600000):
             # Namecoin: Apply retargeting hardfork after AuxPoW start
             first = blockchain.read_header(height - cls.INTERVAL - 1)
         else:
