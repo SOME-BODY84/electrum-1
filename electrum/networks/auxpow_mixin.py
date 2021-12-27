@@ -7,4 +7,4 @@ class AuxPowMixin(object):
     def is_auxpow_active(cls, header) -> bool:
         height_allows_auxpow = header['block_height'] >= cls.AUXPOW_START_HEIGHT
         version_allows_auxpow = header['version'] & cls.BLOCK_VERSION_AUXPOW_BIT
-return height_allows_auxpow and version_allows_auxpow 
+        return height_allows_auxpow and version_allows_auxpow
