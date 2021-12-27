@@ -70,13 +70,32 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     # height 155232); we set a limit of 20 MB so that we have extra wiggle room.
     MAX_INCOMING_MSG_SIZE = 20_000_000  # in bytes
 
-    TARGET_TIMESPAN = int(60 * 6)
-    TARGET_SPACING = int(3)
     INTERVAL = int(TARGET_TIMESPAN / TARGET_SPACING)
 
+   
+        
+    
+    
+    
+    
+    
     @classmethod
     def get_target(cls, height: int, blockchain) -> int:
         index = height // 2016 - 1
+
+	
+     if (index >= 7770000) {
+     TARGET_TIMESPAN = int(15 * 60); 
+     TARGET_SPACING = int(9); 
+    } else if (index >= 7331700) {
+    TARGET_TIMESPAN = int(5 * 60 * 60); 
+    TARGET_SPACING = int(9); 
+    } else {
+    TARGET_TIMESPAN = int(60 * 6);
+    TARGET_SPACING = int(3); 
+   }    
+
+
 
         if index == -1:
             return cls.MAX_TARGET
