@@ -51,3 +51,11 @@ net = networks['Bitcoin']
 def set_mainnet():
 global net
 net = BitcoinMainnet
+
+def select_network(network='Bitcoin'):
+    if not network in networks:
+        raise Exception('Invalid Network. Available: {}'.format(
+            list(networks.keys())))
+    global net
+    net = networks.get(network, 'Bitcoin')
+    return
