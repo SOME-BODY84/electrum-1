@@ -4,7 +4,7 @@ from .abstract_network import AbstractNet
 from .auxpow_mixin import AuxPowMixin
 
 
-class NamecoinMainnet(AbstractNet, AuxPowMixin):
+class PruxcoinMainnet(AbstractNet, AuxPowMixin):
 
     NAME = 'Pruxcoin'
     NAME_LOWER = 'pruxcoin'
