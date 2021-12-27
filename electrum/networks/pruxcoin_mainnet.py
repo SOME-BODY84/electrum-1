@@ -70,57 +70,36 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     TARGET_SPACING = int(3)
     INTERVAL = int(TARGET_TIMESPAN / TARGET_SPACING)
 
-    @classmethod    
-    def get_hash(self, height: int) -> str:
-        def is_height_checkpoint():
-            within_cp_range = height <= constants.net.max_checkpoint()
-            at_chunk_boundary = (height+1) % 201600 == 0
-            return within_cp_range and at_chunk_boundary
-
-        if height == -1:
-            return '0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-        elif height == 0:
-            return constants.net.GENESIS
-        elif is_height_checkpoint():
-            index = height // 201600
-            h, t, _ = self.checkpoints[index]
-            return h
-        else:
-            header = self.read_header(height)
-            if header is None:
-                raise MissingHeader(height)
-            return hash_header(header)
-    @classmethod 
-    def get_timestamp(self, height):
-        if height < len(self.checkpoints) * 201600 and (height+1) % 201600 == 0:
-            index = height // 201600
-            _, _, ts = self.checkpoints[index]
-            return ts
-        return self.read_header(height).get('timestamp')
-
     @classmethod
-    def get_target(self, index: int) -> int:
-        # compute target from chunk x, used in chunk x+1
-        if constants.net.TESTNET:
-            return 0
+    def get_target(cls, height: int, blockchain) -> int:
+        index = height // 2016 - 1
+
         if index == -1:
-            return 0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        if index < len(self.checkpoints):
-            h, t, _ = self.checkpoints[index]
+            return cls.MAX_TARGET
+
+        if index < len(blockchain.checkpoints):
+            h, t = blockchain.checkpoints[index]
             return t
+
+        if not height % cls.INTERVAL == 0:
+            # Get the first block of this retarget period
+            last = blockchain.read_header(height - 1)
+            if not last:
+                raise MissingHeader()
+            return blockchain.bits_to_target(last['bits'])
+
         # new target
-        # Viacoin: go back the full period unless it's the first retarget
-        first_timestamp = self.get_timestamp(index * 201600 - 1 if index > 0 else 0)
-        last = self.read_header(index * 201006 + 201500)
-        if not first_timestamp or not last:
+        first = blockchain.read_header(height - cls.INTERVAL)
+        last = blockchain.read_header(height - 1)
+        if not first or not last:
             raise MissingHeader()
+
         bits = last.get('bits')
-        target = self.bits_to_target(bits)
-        nActualTimespan = last.get('timestamp') - first_timestamp
-        nTargetTimespan = 60 * 6
-        nActualTimespan = max(nActualTimespan, nTargetTimespan // 4)
-        nActualTimespan = min(nActualTimespan, nTargetTimespan * 4)
-        new_target = min(MAX_TARGET, (target * nActualTimespan) // nTargetTimespan)
+        target = blockchain.bits_to_target(bits)
+        nActualTimespan = last.get('timestamp') - first.get('timestamp')
+        nActualTimespan = max(nActualTimespan, cls.TARGET_TIMESPAN // 4)
+        nActualTimespan = min(nActualTimespan, cls.TARGET_TIMESPAN * 4)
+        new_target = min(cls.MAX_TARGET, (target * nActualTimespan) // cls.TARGET_TIMESPAN)
         # not any target can be represented in 32 bits:
-        new_target = self.bits_to_target(self.target_to_bits(new_target))
-        return new_target    
+        new_target = blockchain.bits_to_target(blockchain.target_to_bits(new_target))
+        return new_target
