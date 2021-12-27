@@ -54,4 +54,3 @@ def select_network(network='Bitcoin'):
             list(networks.keys())))
     global net
     net = networks.get(network, 'Bitcoin')
-return
