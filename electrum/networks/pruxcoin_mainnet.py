@@ -106,8 +106,8 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
 
         bits = last.get('bits')
         target = blockchain.bits_to_target(bits)
-        if (index > 15000):
-            nActualTimespan = (last.get('timestamp') - first.get('timestamp') //2)
+        if (height > 15000):
+            nActualTimespan = (last.get('timestamp') - first.get('timestamp') // 2)
         else:
             nActualTimespan = last.get('timestamp') - first.get('timestamp')
         nActualTimespan = max(nActualTimespan, cls.TARGET_TIMESPAN // 4)
