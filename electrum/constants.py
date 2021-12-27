@@ -42,6 +42,7 @@ networks = {
     'Donu-Mainnet': DonuMainnet,
     'Namecoin': NamecoinMainnet,
     'Namecoin-Mainnet': NamecoinMainnet,
+    'Pruxcoin-Mainnet': PruxcoinMainnet,
 }
 
 net = networks['Bitcoin']
