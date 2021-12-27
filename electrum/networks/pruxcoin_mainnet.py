@@ -55,7 +55,7 @@ class PruxcoinMainnet(AbstractNet, AuxPowMixin):
     BASE_UNITS_INVERSE = inv_dict(BASE_UNITS)
     BASE_UNITS_LIST = ['PRUX', 'mPRUX', 'uPRUX', 'swartz']
     DECIMAL_POINT_DEFAULT = 5  # mPRUX
-    AUXPOW_CHAIN_ID = 0x3bf0104
+    AUXPOW_CHAIN_ID = 0x03b
     AUXPOW_START_HEIGHT = 15615201
     BLOCK_VERSION_AUXPOW_BIT = 0x100
 
